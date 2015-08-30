@@ -1,14 +1,9 @@
 import java.util.BitSet;
 import java.util.Scanner;
 
-
 public class Crc {
 	static BitSet divisorBitSet = BitSet.valueOf(new long[]{0b10001000000100001});
 	
-	public static BitSet getRemainder(long dataWord) {
-		BitSet dataWordBitSet = BitSet.valueOf(new long[]{dataWord * (long)Math.pow(2, 16)});
-		return getRemainder(dataWordBitSet);
-	}
 	public static BitSet getRemainder(BitSet dataWordBitSet) {
 //		System.out.println(dataWordBitSet.toString());
 		for (int i = dataWordBitSet.length(); i >= 17; i--) {
@@ -35,14 +30,20 @@ public class Crc {
 	
 	public static BitSet getCodeWord(long dataWord) {
 		BitSet codeWordBitSet = BitSet.valueOf(new long[]{dataWord * (long)Math.pow(2, 16)});
-		BitSet remainder = getRemainder(dataWord);
+		BitSet remainder = getRemainder(codeWordBitSet);
 		for (int i = 0; i < 16; i++) {
 			codeWordBitSet.set(i, remainder.get(i));
 		}
 		return codeWordBitSet;
 	}
+	
+	public static boolean checkCodeWord(long dataWord) {
+		BitSet codeWordBitSet = BitSet.valueOf(new long[]{dataWord});
+		BitSet remainder = getRemainder(codeWordBitSet);
+		return remainder.length() == 0 ? true : false;
+	}
+	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Scanner in = new Scanner(System.in);
 		System.out.println("Enter data word to be sent");
 		String dataWordString = in.next();
@@ -51,7 +52,7 @@ public class Crc {
 		System.out.println("Enter recieved code word");
 		String codeWordString = in.next();
 		int codeWord = Integer.parseInt(codeWordString, 2);
-		if (getRemainder(codeWord).length() == 0) {
+		if (checkCodeWord(codeWord)) {
 			System.out.println("Transmission Successful!");
 		}
 		else {
