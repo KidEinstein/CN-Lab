@@ -59,7 +59,7 @@ public class Crc {
 			System.out.println("Error in transmission");
 		}
 		
-		
+		in.close();
 	}
 
 }
